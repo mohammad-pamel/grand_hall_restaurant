@@ -23,7 +23,7 @@ This project demonstrates a modern full-stack architecture using React, Node.js,
 ## 🔐 Admin Credentials
 
 - **Email:** admin@gmail.com  
-- **Password:** Admin@123  
+- **Password:** @Admin1
 
 ---
 
