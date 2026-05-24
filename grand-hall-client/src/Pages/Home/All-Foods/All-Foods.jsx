@@ -23,7 +23,8 @@ const AllFoods = () => {
             navigate('/login');
         }
         else {
-            navigate(`/food-details/${id}`);
+            // navigate(`/food-details/${id}`);
+            navigate('/login', { state: { from: `/food-details/${id}` } });
         }
     };
 
@@ -39,9 +40,9 @@ const AllFoods = () => {
                 <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
 
                     {
-                        foods.map(food =>
-                            food?.availability?.isAvailable && (
-
+                        foods
+                            .filter(food => food?.availability?.isAvailable)
+                            .map(food => (
                                 <div key={food._id} className="card flex flex-col p-3 rounded-2xl shadow-xl border-4 border-amber-700 hover:scale-105">
 
                                     {/* Image */}
@@ -87,7 +88,7 @@ const AllFoods = () => {
 
                                 </div>
                             )
-                        )
+                            )
                     }
 
                 </div>

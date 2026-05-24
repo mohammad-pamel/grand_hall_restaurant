@@ -53,7 +53,8 @@ const AuthProvider = ({ children }) => {
             console.log('current user', user)
             if (user) {
                 const loggedUser = {email: user.email}
-                fetch('http://localhost:5000/getToken', {
+                
+                fetch('http://localhost:5000/jwt', {
                     method: 'POST',
                     headers: {
                         'content-type': "application/json"
@@ -62,14 +63,16 @@ const AuthProvider = ({ children }) => {
                 })
                 .then(res => res.json())
                 .then(data => {
-                    console.log('after getting token', data.token);
-                    localStorage.setItem('token', data.token);
+                    // console.log('after getting token', data.token);
+                    // localStorage.setItem('token', data.token);
+                    localStorage.setItem('access-token', data.token);
                 })
                 // const token = await user.getIdToken();
                 // console.log('token fro', token);
             }
             else{
-                localStorage.removeItem('token');
+                // localStorage.removeItem('token');
+                localStorage.removeItem('access-token');
             }
             setLoading(false);
         });

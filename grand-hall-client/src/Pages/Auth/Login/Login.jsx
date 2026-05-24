@@ -3,25 +3,43 @@ import { useForm } from 'react-hook-form';
 import useAuth from '../../../hooks/useAuth';
 import { Link, useLocation, useNavigate } from 'react-router';
 import SocialLogin from '../SocialLogin/SocialLogin';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
 
 const Login = () => {
 
-    const { register, handleSubmit, formState: {errors} } = useForm();
-    const {signInUser} = useAuth();
+    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { signInUser } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
+    const axios = useAxiosSecure();
 
     const handleLogin = (data) => {
         console.log('After login', data);
-        signInUser(data.email, data.password)
-        .then(result => {
-            console.log(result.user);
-            navigate(location?.state || '/');
-        })
-        .catch(error => {
-            console.log(error);
-        })
+        // signInUser(data.email, data.password)
+        //     .then(async (result) => {
 
+        //         const res = await axios.post(`${import.meta.env.VITE_API_URL}/jwt`, {
+        //             email: result.user.email
+        //         });
+
+        //         localStorage.setItem('access-token', res.data.token);
+
+        //         navigate(location?.state?.from?.pathname || '/');
+        //     });
+        signInUser(data.email, data.password)
+            .then(async (result) => {
+
+                const res = await axios.post(`${import.meta.env.VITE_API_URL}/jwt`, {
+                    email: result.user.email
+                });
+
+                const token = res.data.token;
+
+                // ✅ SAME KEY everywhere
+                localStorage.setItem('access-token', token);
+
+                navigate(location?.state?.from?.pathname || '/');
+            });
     }
 
     return (
@@ -32,14 +50,14 @@ const Login = () => {
                 <form onSubmit={handleSubmit(handleLogin)} className="card-body">
                     <fieldset className="fieldset">
                         <label className="label">Email</label>
-                        <input type="email" {...register('email', {required: true})} className="input" placeholder="Email" />
-                        {errors.email?.type==='required' && <p className='text-red-600'>Email is required</p>}
+                        <input type="email" {...register('email', { required: true })} className="input" placeholder="Email" />
+                        {errors.email?.type === 'required' && <p className='text-red-600'>Email is required</p>}
 
                         <label className="label text-white">Password</label>
-                        <input type="password" {...register('password', {required: true, minLength: 6, pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/})} className="input" placeholder="Password" />
-                        {errors.password?.type==='required' && <p className='text-red-600'>Password is required</p>}
-                        {errors.password?.type==='minLength' && <p className='text-red-600'>Password must be at least 6 character</p>}
-                        {errors.password?.type==='pattern' && <p className='text-red-600'>Password must be at least one uppercase one lowercase one number and one special character</p>}
+                        <input type="password" {...register('password', { required: true, minLength: 6, pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/ })} className="input" placeholder="Password" />
+                        {errors.password?.type === 'required' && <p className='text-red-600'>Password is required</p>}
+                        {errors.password?.type === 'minLength' && <p className='text-red-600'>Password must be at least 6 character</p>}
+                        {errors.password?.type === 'pattern' && <p className='text-red-600'>Password must be at least one uppercase one lowercase one number and one special character</p>}
 
                         <div><a className="link link-hover">Forgot password?</a></div>
                         <button className="btn bg-primary text-secondary hover:bg-secondary hover:text-primary mt-4">Login</button>

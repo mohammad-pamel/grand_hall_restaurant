@@ -5,52 +5,19 @@ import { IoBookSharp } from 'react-icons/io5';
 import { LuBookPlus } from 'react-icons/lu';
 import { MdInterpreterMode, MdOutlinePayment } from 'react-icons/md';
 import { Link, NavLink, Outlet } from 'react-router';
-import { useQuery } from '@tanstack/react-query';
-import useAuth from '../hooks/useAuth';
+// import { useQuery } from '@tanstack/react-query';
+// import useAuth from '../hooks/useAuth';
 import useRole from '../hooks/useRole';
-import useAxiosSecure from '../hooks/useAxiosSecure';
+// import useAxiosSecure from '../hooks/useAxiosSecure';
 
 
 const DashboardLayout = () => {
 
-    // const { user } = useAuth();
-    // const { role } = useRole();
-    // const axiosSecure = useAxiosSecure();
-    // const navigate = useNavigate();
-    // const { data: users = {} } = useQuery({
-    //     queryKey: ['users'],
-    //     queryFn: async () => {
-    //         const res = await axiosSecure.get(`/users`);
-    //         const currentUser = res.data.filter(u => u.email === user.email);
-    //         console.log('usersdbbb', res.data);
-    //         console.log('usersdbbb', currentUser);
-    //         return currentUser[0];
-    //         return res.data;
-
-    //     }
-    // })
-
-    // console.log(users);
-
-    const { user } = useAuth();
-    const { role } = useRole();
-    const axiosSecure = useAxiosSecure();
-    // const navigate = useNavigate();
-    const { data: users = {} } = useQuery({
-        queryKey: ['users'],
-        queryFn: async () => {
-            const res = await axiosSecure.get(`/users`);
-            const currentUser = res.data.filter(u => u.email === user?.email);
-            // console.log('usersdbbb', res.data);
-            console.log('usersdbbb', currentUser);
-            return currentUser[0];
-            // return res.data;
-
-        }
-    });
-
-    console.log(users);
-
+    const { role, roleLoading } = useRole();
+    
+    if (roleLoading) {
+        return <span className="loading loading-spinner loading-lg"></span>;
+    }
 
 
     return (
@@ -88,22 +55,22 @@ const DashboardLayout = () => {
                         {/* {
                             role === 'user' &&
                             <> */}
-                                {/* <li>
+                        {/* <li>
                                     <NavLink className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="My Orders" to='/dashboard/my-orders'>
                                         <FaBorderAll />
                                         <span className="is-drawer-close:hidden">My Orders</span></NavLink>
                                 </li> */}
-                                {/* <li>
+                        {/* <li>
                                     <NavLink className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Payments" to='/dashboard/payments'>
                                         <MdOutlinePayment />
                                         <span className="is-drawer-close:hidden">Payments</span></NavLink>
                                 </li> */}
-                                {/* <li>
+                        {/* <li>
                                     <NavLink className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="My Profile" to='/dashboard/my-profile'>
                                         <CgProfile />
                                         <span className="is-drawer-close:hidden">My Profile</span></NavLink>
                                 </li> */}
-                            {/* </>
+                        {/* </>
                         } */}
 
                         {/*  librarian links */}
@@ -111,12 +78,12 @@ const DashboardLayout = () => {
                         {/* {
                             { role === 'librarian' && }
                             <> */}
-                                {/* <li>
+                        {/* <li>
                                     <NavLink className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="My Books" to='/dashboard/my-books'>
                                         <IoBookSharp />
                                         <span className="is-drawer-close:hidden">My Books</span></NavLink>
                                 </li> */}
-                                {/* <li>
+                        {/* <li>
                                     <NavLink className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Add Food" to='/dashboard/add-food'>
                                         <LuBookPlus />
                                         <span className="is-drawer-close:hidden">Add Food</span></NavLink>
@@ -126,7 +93,7 @@ const DashboardLayout = () => {
                                         <FaBorderAll />
                                         <span className="is-drawer-close:hidden">Manage Orders</span></NavLink>
                                 </li> */}
-                            {/* </>
+                        {/* </>
                         } */}
 
 
@@ -135,10 +102,10 @@ const DashboardLayout = () => {
 
                         {/* admin links */}
 
-                                 { 
-                             role === 'admin' && 
+                        {
+                            role === 'admin' &&
                             <>
-                            <li>
+                                <li>
                                     <NavLink className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Add Food" to='/dashboard/add-food'>
                                         <LuBookPlus />
                                         <span className="is-drawer-close:hidden">Add Food</span></NavLink>
@@ -154,7 +121,7 @@ const DashboardLayout = () => {
                                         <span className="is-drawer-close:hidden">All Users</span></NavLink>
                                 </li>
                                 <li>
-                                    <NavLink className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Manage Foods" to='/dashboard/manage-Foods'>
+                                    <NavLink className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Manage Foods" to='/dashboard/manage-foods'>
                                         <FaBook />
                                         <span className="is-drawer-close:hidden">Manage Foods</span></NavLink>
                                 </li>
@@ -169,7 +136,7 @@ const DashboardLayout = () => {
                                         <span className="is-drawer-close:hidden">My Profile</span></NavLink>
                                 </li> */}
                             </>
-                          } 
+                        }
 
 
 

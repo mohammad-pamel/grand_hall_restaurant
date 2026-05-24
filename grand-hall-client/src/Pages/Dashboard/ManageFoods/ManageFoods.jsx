@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import { useState } from 'react';
 
-const imageUploadKey = import.meta.env.VITE_IMAGE_UPLOAD_KEY;
+// const imageUploadKey = import.meta.env.VITE_IMAGE_UPLOAD_KEY;
 
 const ManageFoods = () => {
 
@@ -25,7 +25,7 @@ const ManageFoods = () => {
     formData.append('image', imageFile);
 
     const res = await fetch(
-      `https://api.imgbb.com/1/upload?key=${imageUploadKey}`,
+      `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_host_key}`,
       {
         method: 'POST',
         body: formData
@@ -79,7 +79,8 @@ const ManageFoods = () => {
     const status = form.status.value === 'true';
     const imageFile = form.image.files[0];
 
-    let imageUrl = selectedFood.media.thumbnail;
+    // let imageUrl = selectedFood.media.thumbnail;
+    let imageUrl = selectedFood?.media?.thumbnail || "";
 
     if (imageFile) {
       imageUrl = await uploadImage(imageFile);
@@ -292,218 +293,3 @@ const ManageFoods = () => {
 };
 
 export default ManageFoods;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import { useQuery } from '@tanstack/react-query';
-// import useAxiosSecure from '../../../hooks/useAxiosSecure';
-// import { useState } from 'react';
-
-// const imageUploadKey = import.meta.env.VITE_IMAGE_UPLOAD_KEY; // imgbb api key
-
-// const ManageFoods = () => {
-//   const axiosSecure = useAxiosSecure();
-//   const [loading, setLoading] = useState(false);
-//   const [selectedFood, setSelectedFood] = useState(null);
-
-//   const { data: foods = [], refetch } = useQuery({
-//     queryKey: ['foods'],
-//     queryFn: async () => {
-//       const res = await axiosSecure.get('/menu');
-//       console.log('manage food', res.data);
-//       return res.data;
-//     }
-//   });
-
-//   // upload image to imgbb
-//   const uploadImage = async (imageFile) => {
-//     const formData = new FormData();
-//     formData.append('image', imageFile);
-
-//     const res = await fetch(`https://api.imgbb.com/1/upload?key=${imageUploadKey}`, {
-//       method: 'POST',
-//       body: formData
-//     });
-
-//     const data = await res.json();
-//     return data.data.display_url;
-//   };
-
-//   const handleDeleteFood = async (foodId) => {
-//     const confirm = window.confirm('Delete this food?');
-//     if (!confirm) return;
-
-//     setLoading(true);
-//     await axiosSecure.delete(`/menu/${foodId}`);
-//     refetch();
-//     setLoading(false);
-//   };
-
-//   // open modal
-//   const openEditModal = (food) => {
-//     setSelectedFood(food);
-//     document.getElementById('edit_modal').showModal();
-//   };
-
-//   // update food
-//   const handleEditFood = async (e) => {
-//     e.preventDefault();
-
-//     const form = e.target;
-//     const name = form.name.value;
-//     const price = form.price.value;
-//     const status = form.status.value;
-//     const imageFile = form.image.files[0];
-
-//     let imageUrl = selectedFood.foodImage;
-
-//     if (imageFile) {
-//       imageUrl = await uploadImage(imageFile);
-//     }
-
-//     const updatedFood = {
-//       foodName: name,
-//       price,
-//       foodStatus: status,
-//       foodImage: imageUrl
-//     };
-
-//     setLoading(true);
-//     await axiosSecure.patch(`/menu/${selectedFood._id}`, updatedFood);
-//     refetch();
-//     setLoading(false);
-//     document.getElementById('edit_modal').close();
-//   };
-
-//   return (
-//     <div className='w-11/12 mx-auto py-14'>
-//       <h2 className='text-3xl font-bold my-8'>Manage Foods: {foods.length}</h2>
-
-//       {loading && <p className='text-sm text-gray-500 mb-2'>Processing...</p>}
-
-//       <div className='overflow-x-auto'>
-//         <table className='table w-full border'>
-//           <thead>
-//             <tr>
-//               <th>No</th>
-//               <th>Image</th>
-//               <th>Name</th>
-//               <th>Price</th>
-//               <th>Status</th>
-//               <th>Actions</th>
-//             </tr>
-//           </thead>
-
-//           <tbody>
-//             {foods.map((food, i) => (
-//               <tr key={food._id}>
-//                 <td>{i + 1}</td>
-
-//                 <td>
-//                   <img
-//                     src={food.foodImage}
-//                     className='w-16 h-16 object-cover rounded'
-//                   />
-//                 </td>
-
-//                 <td>{food.foodName}</td>
-//                 <td>৳ {food.price}</td>
-
-//                 <td>
-//                   <span
-//                     className={`text-white px-2 py-1 rounded ${
-//                       food.foodStatus === 'Available' ? 'bg-green-600' : 'bg-red-500'
-//                     }`}
-//                   >
-//                     {food.foodStatus}
-//                   </span>
-//                 </td>
-
-//                 <td className='space-x-2'>
-//                   <button
-//                     onClick={() => openEditModal(food)}
-//                     className='btn btn-sm btn-info'
-//                   >
-//                     Edit
-//                   </button>
-
-//                   <button
-//                     onClick={() => handleDeleteFood(food._id)}
-//                     className='btn btn-sm btn-error'
-//                   >
-//                     Delete
-//                   </button>
-//                 </td>
-//               </tr>
-//             ))}
-//           </tbody>
-//         </table>
-//       </div>
-
-//       {/* EDIT MODAL */}
-//       <dialog id='edit_modal' className='modal'>
-//         <div className='modal-box'>
-//           <h3 className='font-bold text-lg mb-4'>Edit Food</h3>
-
-//           <form onSubmit={handleEditFood} className='space-y-3'>
-//             <input
-//               defaultValue={selectedFood?.foodName}
-//               name='name'
-//               placeholder='Food Name'
-//               className='input input-bordered w-full'
-//             />
-
-//             <input
-//               defaultValue={selectedFood?.price}
-//               name='price'
-//               placeholder='Price'
-//               type='number'
-//               className='input input-bordered w-full'
-//             />
-
-//             {/* IMAGE FILE INPUT */}
-//             <input
-//               name='image'
-//               type='file'
-//               accept='image/*'
-//               className='file-input file-input-bordered w-full'
-//             />
-
-//             {/* SELECT STATUS */}
-//             <select
-//               name='status'
-//               defaultValue={selectedFood?.foodStatus}
-//               className='select select-bordered w-full'
-//             >
-//               <option>Available</option>
-//               <option>Unavailable</option>
-//             </select>
-
-//             <button className='btn btn-primary w-full'>Update Food</button>
-//           </form>
-//         </div>
-//       </dialog>
-//     </div>
-//   );
-// };
-
-// export default ManageFoods;

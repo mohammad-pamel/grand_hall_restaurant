@@ -1,8 +1,5 @@
 import React from 'react';
 import facebookimg from '../../../../src/assets/facebook.png'
-// import instagramimg from '../../../../src/assets/instagram.png'
-// import twitterimg from '../../../../src/assets/twitter.png'
-// import linkedinimg from '../../../../src/assets/linkedin.png'
 import Logo from '../../../Components/Logo/Logo';
 import { Link } from 'react-router';
 
@@ -22,9 +19,7 @@ const Footer = () => {
 
                             <ul className='text-xs flex'>
                                 <li className='flex items-center'><img className=' rounded-full w-[50px] h-[50px] mr-2' src={facebookimg} alt="" /></li>
-                                {/* <li className='flex items-center'><img className='bg-white rounded-full w-[40px] h-[40px] mr-2' src={twitterimg} alt="" /></li> */}
-                                {/* <li className='flex items-center'><img className=' rounded-full w-[50px] h-[50px] mr-2' src={linkedinimg} alt="" /></li>
-                                <li className='flex items-center'><img className=' rounded-full w-[50px] h-[50px] mr-2' src={instagramimg} alt="" /></li> */}
+                                
                             </ul>
                         </div>
                     </div>
@@ -36,14 +31,7 @@ const Footer = () => {
                             {/* <li>Contact Saled</li> */}
                         </ul>
                     </div>
-                    {/* <div>
-                        <h3 className='text-xl font-medium text-white mb-3'>Services</h3>
-                        <ul className='text-xs space-y-3'>
-                            <li>Apps & Services</li>
-                            <li>Customer Stories</li>
-                            <li>Download Apps</li>
-                        </ul>
-                    </div> */}
+                   
                     <div>
                         <h3 className='text-xl font-medium text-white mb-3'>Information</h3>
                         <ul className='text-xs space-y-3'>

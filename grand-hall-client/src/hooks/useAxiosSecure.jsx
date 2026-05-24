@@ -3,34 +3,74 @@ import { useEffect } from 'react';
 
 const axiosSecure = axios.create({
   // baseURL: 'http://localhost:5000'
-  baseURL: 'http://localhost:5000'
+  // baseURL: import.meta.env.VITE_API_URL
+  baseURL: 'https://grand-hall-restaurant-server.vercel.app',
 });
 
 const useAxiosSecure = () => {
 
   useEffect(() => {
 
+    const axiosSecure = axios.create({
+  baseURL: import.meta.env.VITE_API_URL
+  // baseURL: 'http://localhost:5000'
+
+});
+
+axiosSecure.interceptors.request.use((config) => {
+  const token = localStorage.getItem('access-token');
+  console.log(token)
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
     // 🔥 Request interceptor
-    const requestInterceptor = axiosSecure.interceptors.request.use(
-      (config) => {
+  //   const requestInterceptor = axiosSecure.interceptors.request.use(
+  //     (config) => {
 
-        const token = localStorage.getItem('token');
+  //       // const token = localStorage.getItem('token');
+  //       const token = localStorage.getItem('access-token');
+  //       console.log(localStorage.getItem('access-token'))
 
-        if (token) {
-          config.headers.authorization = `Bearer ${token}`;
-        }
+  //       if (token) {
+  //         config.headers.authorization = `Bearer ${token}`;
+  //       }
 
-        return config;
-      },
-      (error) => {
-        return Promise.reject(error);
-      }
-    );
+  //       return config;
+  //     },
+  //     (error) => {
+  //       return Promise.reject(error);
+  //     }
+  //   );
 
-    // 🔥 Cleanup interceptor
-    return () => {
-      axiosSecure.interceptors.request.eject(requestInterceptor);
-    };
+  //   const responseInterceptor =
+  // axiosSecure.interceptors.response.use(
+
+  //   (response) => response,
+
+  //   (error) => {
+
+  //     if (
+  //       error.response?.status === 401 ||
+  //       error.response?.status === 403
+  //     ) {
+
+  //       localStorage.removeItem('access-token');
+
+  //     }
+
+  //     return Promise.reject(error);
+  //   }
+  // );
+
+  //   // 🔥 Cleanup interceptor
+  //   return () => {
+  //     axiosSecure.interceptors.request.eject(requestInterceptor);
+  //     axiosSecure.interceptors.response.eject(responseInterceptor);
+  //   };
 
   }, []);
 

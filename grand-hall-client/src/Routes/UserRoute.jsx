@@ -3,7 +3,7 @@ import useAuth from '../hooks/useAuth';
 import useRole from '../hooks/useRole';
 import Forbidden from './../Components/Forbidden/Forbidden';
 
-const LibrarianRoute = ({ children }) => {
+const UserRoute = ({ children }) => {
     const { loading, user } = useAuth();
     const { role, roleLoading } = useRole()
 
@@ -20,4 +20,4 @@ const LibrarianRoute = ({ children }) => {
     return children;
 };
 
-export default LibrarianRoute;
+export default UserRoute;

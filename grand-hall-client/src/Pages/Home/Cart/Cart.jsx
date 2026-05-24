@@ -7,15 +7,13 @@ import { Link } from 'react-router';
 
 const Cart = () => {
 
-    //   const axiosSecure = axios.create({
-    //     baseURL: "http://localhost:5000"
-    //   });
     const axiosSecure = useAxiosSecure();
     const { user } = useAuth();
 
 
     const { data: cart = [], refetch } = useQuery({
         queryKey: ["cart", user?.email],
+        enabled: !!user?.email,
         queryFn: async () => {
             const res = await axiosSecure.get(`/cart?email=${user.email}`);
             return res.data;
@@ -52,6 +50,7 @@ const Cart = () => {
 
         if (confirm.isConfirmed) {
             const res = await axiosSecure.delete(`/cart/${id}`);
+            // /cart/user/:email
 
             if (res.data.deletedCount) {
                 Swal.fire("Deleted!", "Item removed", "success");

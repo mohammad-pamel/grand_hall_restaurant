@@ -37,7 +37,8 @@ const FoodDetails = () => {
   const cartItem = {
     foodId: food._id,
     name: food.name,
-    image: food.media.thumbnail,
+    // image: food.media.thumbnail,
+    image: food?.media?.thumbnail,
     price: food.pricing.discountPrice || food.pricing.basePrice,
     quantity: 1,
     email: user.email
@@ -222,6 +223,8 @@ const FoodDetails = () => {
           <div>
             <strong>Ingredients:</strong>
             <ul className="list-disc ml-6 mt-2">
+              {/* {food?.ingredients?.map((item, index) => ( */}
+              {/* (Array.isArray(food?.ingredients) ? food.ingredients : []) */}
               {food?.ingredients?.map((item, index) => (
                 <li key={index}>{item.trim()}</li>
               ))}

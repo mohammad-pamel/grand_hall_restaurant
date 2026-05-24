@@ -47,8 +47,11 @@ export const router = createBrowserRouter([
       },
       {
         path: 'my-orders',
-        element: <UserRoute><MyOrders></MyOrders></UserRoute>
-        // element: <PrivateRoute><MyOrders></MyOrders></PrivateRoute>
+        element: (
+          <PrivateRoute>
+            <MyOrders />
+          </PrivateRoute>
+        )
       },
       {
         path: 'cart',
@@ -124,20 +127,7 @@ export const router = createBrowserRouter([
       //     {
       //       path: 'payment-cancelled',
       //       element: <UserRoute><PaymentCancelled></PaymentCancelled></UserRoute>
-      //     },
-      // {
-      //   path: 'my-books',
-      //   element: <MyBooks></MyBooks>
-      // },
-      //     {
-      //       path: 'edit-book/:id',
-      //       element: <LibrarianRoute><EditBook></EditBook></LibrarianRoute>
-      //     },
-
-      //     {
-      //       path: 'profile',
-      //       element: <AdminRoute><MyProfile></MyProfile></AdminRoute>
-      //     },
+      //     }
     ]
   },
   {

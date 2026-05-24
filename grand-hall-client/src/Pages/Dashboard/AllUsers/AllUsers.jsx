@@ -8,19 +8,13 @@ const AllUsers = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
 
-    // const { data: users = [], refetch } = useQuery({
-    //     queryKey: ['users'],
-    //     queryFn: async () => {
-    //         const res = await axiosSecure.get('/users');
-    //         return res.data;
-    //     }
-    // });
 
     const { data: users = [], refetch } = useQuery({
     queryKey: ['users'],
     queryFn: async () => {
         const res = await axiosSecure.get('/users');
-        return res.data || [];
+        console.log("all users", res.data)
+        return res.data ;
     }
 });
 
@@ -78,7 +72,7 @@ console.log(users);
                                         <div className="flex items-center gap-3">
                                             <div className="avatar">
                                                 <div className="mask mask-squircle w-12 h-12">
-                                                    <img src={u.photoURL} />
+                                                    <img src={u.photoURL || "https://i.ibb.co/4pDNDk1/avatar.png"} />
                                                 </div>
                                             </div>
 
