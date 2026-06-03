@@ -14,7 +14,7 @@ const Login = () => {
     const axios = useAxiosSecure();
 
     const handleLogin = (data) => {
-        console.log('After login', data);
+        // console.log('After login', data);
         // signInUser(data.email, data.password)
         //     .then(async (result) => {
 

@@ -13,6 +13,7 @@ const app = express();
 import SSLCommerzPayment from 'sslcommerz-lts';
 const port = process.env.PORT || 5000;
 
+
 const store_id = process.env.STORE_ID
 const store_passwd = process.env.STORE_PASS
 const is_live = false //true for live, false for sandbox
@@ -33,7 +34,9 @@ app.use(cors({
   credentials: true
 }));
 
-// const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.zyhkinn.mongodb.net/?appName=Cluster0`;
+
+
+// const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.zyhkinn.mongodb.net/?appName=Cluster0`
 
 const uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@ac-wqk9jwc-shard-00-00.zyhkinn.mongodb.net:27017,ac-wqk9jwc-shard-00-01.zyhkinn.mongodb.net:27017,ac-wqk9jwc-shard-00-02.zyhkinn.mongodb.net:27017/?ssl=true&replicaSet=atlas-9ilhfu-shard-0&authSource=admin&appName=Cluster0`
 
@@ -44,50 +47,6 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   }
 });
-
-
-const verifyToken = (req, res, next) => {
-  console.log("HEADERS:", req.headers.authorization);
-
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader) {
-    return res.status(401).send({ message: 'No token' });
-  }
-
-  const token = authHeader.split(' ')[1];
-
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    console.log("DECODED TOKEN:", decoded);
-    console.log("JWT ERROR:", err);
-
-    if (err) {
-      return res.status(401).send({ message: 'Invalid token' });
-    }
-
-    req.token_email = decoded.email;
-    next();
-  });
-};
-
-
-const verifyAdmin = async (req, res, next) => {
-
-  console.log("USER IN ADMIN:", req.user);
-
-  const email = req.user?.email;
-
-  const user = await usersCollection.findOne({ email });
-
-  console.log("DB USER:", user);
-
-  if (!user || user.role !== 'admin') {
-    return res.status(403).send({ message: 'Forbidden' });
-  }
-
-  next();
-};
-
 
 
 let foodsCollection;
@@ -133,7 +92,6 @@ async function startServer() {
 
     // app.get('/users', verifyToken, verifyAdmin, async (req, res) => {
     app.get('/users', async (req, res) => {
-      console.log("HIT USERS API");
       const result = await usersCollection.find().toArray();
       res.send(result);
     });
@@ -205,6 +163,7 @@ async function startServer() {
     app.get('/menu/:id', async (req, res) => {
       try {
         const id = req.params.id;
+
         const result = await foodsCollection.findOne({
           _id: new ObjectId(id)
         });
@@ -350,14 +309,13 @@ async function startServer() {
     app.get('/orders', async (req, res) => {
       try {
         const email = req.query.email;
-        const tokenEmail = req.token_email;
+        // const tokenEmail = req.token_email;
+        
 
-        console.log("query email:", email);
-        console.log("token email:", tokenEmail);
+        
+        const user = await usersCollection.findOne({ email });
+        // const user = await usersCollection.findOne({ email: tokenEmail });
 
-        const user = await usersCollection.findOne({ email: tokenEmail });
-
-        console.log("user server:", user);
 
         // 🔥 admin → all orders
         if (user?.role === 'admin') {
@@ -370,7 +328,7 @@ async function startServer() {
         }
 
         // 🔥 user → own orders only
-        if (!email || email !== tokenEmail) {
+        if (!email) {
           return res.status(403).send({ message: 'Forbidden access' });
         }
 
@@ -382,7 +340,6 @@ async function startServer() {
         res.send(result);
 
       } catch (error) {
-        console.log(error);
         res.status(500).send({ message: 'Failed to fetch orders' });
       }
     });
@@ -429,7 +386,6 @@ async function startServer() {
         res.send(result);
 
       } catch (error) {
-        console.log(error);
         res.status(500).send({ message: 'Order update failed' });
       }
     });
@@ -438,12 +394,10 @@ async function startServer() {
 
     app.post('/paymentBkash', async (req, res) => {
       const { orderId } = req.body;
-      console.log(orderId);
 
       try {
         // const orederData = await oredersCollection.findOne(orderId);
         const orderData = await ordersCollection.findOne({ _id: new ObjectId(orderId) });
-        console.log(orderData);
         const tran_id = orderId
         const data = {
           total_amount: orderData.orderTotal,

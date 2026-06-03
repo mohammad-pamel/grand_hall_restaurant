@@ -15,9 +15,12 @@ const MyOrders = () => {
     enabled: !!user && !loading,
     queryFn: async () => {
       const res = await axiosSecure.get(`/orders?email=${user.email}`);
+      // console.log("my-orders", res.data);
       return res.data;
     }
   });
+
+  // console.log("my-orders orders", orders);
 
   // Cancel order
   const handleCancelOrder = async (id) => {
@@ -61,11 +64,11 @@ const MyOrders = () => {
 
   const paymentBkash = async (order) => {
     const orderId = order._id;
-    console.log(order._id);
+    // console.log(order._id);
     try {
       const { data } = await axiosSecure.post(`/paymentBkash`, { orderId });
       if (data.success) {
-        console.log(data);
+        // console.log(data);
         // window.location.replace(data.url)
         if (data?.url) {
           window.location.replace(data.url);

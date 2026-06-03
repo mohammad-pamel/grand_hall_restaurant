@@ -2,24 +2,36 @@ import { useQuery } from '@tanstack/react-query';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import { useState } from 'react';
 import Swal from "sweetalert2";
+import useAuth from '../../../hooks/useAuth';
 
 const ManageOrders = () => {
 
   const axiosSecure = useAxiosSecure();
+  const { user, loading } = useAuth();
 
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [paymentFilter, setPaymentFilter] = useState('all');
   const [selectedOrder, setSelectedOrder] = useState(null);
 
+  // const { data: orders = [], refetch } = useQuery({
+  //   queryKey: ['orders'],
+  //   queryFn: async () => {
+  //     const res = await axiosSecure.get('/orders');
+  //     console.log("manage orders: ", res.data)
+  //     return res.data;
+  //   }
+  // });
+
   const { data: orders = [], refetch } = useQuery({
-    queryKey: ['orders'],
-    queryFn: async () => {
-      const res = await axiosSecure.get('/orders');
-      console.log("manage orders: ", res.data)
-      return res.data;
-    }
-  });
+      queryKey: ['orders', user?.email],
+      enabled: !!user && !loading,
+      queryFn: async () => {
+        const res = await axiosSecure.get(`/orders?email=${user.email}`);
+        // console.log("manage-orders", res.data);
+        return res.data;
+      }
+    });
 
   // ⭐ Order Status Update
   const handleOrderStatus = async (id, newStatus) => {

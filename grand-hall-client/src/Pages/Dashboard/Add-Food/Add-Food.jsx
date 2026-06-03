@@ -75,7 +75,7 @@ const AddFood = () => {
             //     // createdBy: user?.email
         };
 
-        console.log('foodddddd', foodData);
+        // console.log('foodddddd', foodData);
 
         Swal.fire({
             title: "Add Food Item?",

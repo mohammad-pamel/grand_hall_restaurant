@@ -13,12 +13,12 @@ const AllUsers = () => {
     queryKey: ['users'],
     queryFn: async () => {
         const res = await axiosSecure.get('/users');
-        console.log("all users", res.data)
+        // console.log("all users", res.data)
         return res.data ;
     }
 });
 
-console.log(users);
+// console.log(users);
 
 
     // 🔥 Role Change

@@ -11,17 +11,18 @@ const FoodDetails = () => {
   const { id } = useParams();
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
   // Fetch food details
+  
   const { data: food = {}, isLoading } = useQuery({
-    queryKey: ['food', id],
-    enabled: !!id,
-    queryFn: async () => {
-      const res = await axiosSecure.get(`/menu/${id}`);
-      return res.data;
-    }
-  });
+  queryKey: ['food', id],
+  enabled: !!id && !loading,
+  queryFn: async () => {
+    const res = await axiosSecure.get(`/menu/${id}`);
+    return res.data;
+  }
+});
 
  const handleAddToCart = async () => {
 

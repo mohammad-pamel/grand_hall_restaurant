@@ -21,7 +21,7 @@ const Checkout = () => {
   }
 });
 
-  console.log('cartItems', cartItems)
+  // console.log('cartItems', cartItems)
 
 
     const [formData, setFormData] = useState({
