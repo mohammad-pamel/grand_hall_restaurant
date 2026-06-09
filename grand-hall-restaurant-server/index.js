@@ -13,14 +13,116 @@ const app = express();
 import SSLCommerzPayment from 'sslcommerz-lts';
 const port = process.env.PORT || 5000;
 
+// const admin = require("firebase-admin");
+
+// const decoded = Buffer.from(process.env.FB_SERVICE_KEY, 'base64').toString('utf8');
+// const serviceAccount = JSON.parse(decoded);
+
+// admin.initializeApp({
+//     credential: admin.credential.cert(serviceAccount)
+// });
+
+import admin from "firebase-admin";
+
+// import serviceAccount from "./grand-hall-firebase-adminsdk.json";
+import serviceAccount from './grand-hall-firebase-adminsdk.json' with { type: 'json' };
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
 
 const store_id = process.env.STORE_ID
 const store_passwd = process.env.STORE_PASS
 const is_live = false //true for live, false for sandbox
 
+// const verifyFBToken = async (req, res, next) => {
+//     const token = req.headers.authorization;
+//     console.log("token", token)
 
-const decoded = Buffer.from(process.env.FB_SERVICE_KEY, "base64").toString("utf8");
-const serviceAccount = JSON.parse(decoded);
+//     if (!token) {
+//         return res.status(401).send({ message: 'unauthorized access' })
+//     }
+
+//     try {
+//         const idToken = token.split(' ')[1];
+//         const decoded = await admin.auth().verifyIdToken(idToken);
+//         console.log('decoded in the token', decoded);
+//         req.decoded_email = decoded.email;
+//         next();
+//     }
+//     catch (err) {
+//         return res.status(401).send({ message: 'unauthorized access' })
+//     }
+// }
+
+/////////ai////////////////
+// const verifyFBToken = async (req, res, next) => {
+//     console.log("HEADERS:", req.headers.authorization);
+
+//     const token = req.headers.authorization;
+
+//     console.log("TOKEN:", token);
+
+//     if (!token) {
+//         return res.status(401).send({ message: 'unauthorized access' });
+//     }
+
+//     try {
+//         const idToken = token.split(' ')[1];
+
+//         const decoded = await admin.auth().verifyIdToken(idToken);
+
+//         console.log("DECODED:", decoded.email);
+
+//         req.decoded_email = decoded.email;
+
+//         next();
+//     } catch (err) {
+//         console.log("VERIFY ERROR:", err);
+//         return res.status(401).send({ message: 'unauthorized access' });
+//     }
+// };
+
+
+const verifyToken = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader) {
+    return res.status(401).send({ message: "Unauthorized" });
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(401).send({ message: "Unauthorized" });
+    }
+
+    req.decoded = decoded;
+    next();
+  });
+};
+
+
+// const verifyAdmin = async (req, res, next) => {
+//     if (!req.collections) {
+//         return res.status(500).send({ message: 'Database collections not available' });
+//     }
+//     const { userCollection } = req.collections;
+//     const email = req.decoded_email;
+//     const query = { email };
+//     const user = await usersCollection.findOne(query);
+
+//     if (!user || user.role !== 'admin') {
+//         return res.status(403).send({ message: 'forbidden access' });
+//     }
+
+//     next();
+// }
+
+
+// const decoded = Buffer.from(process.env.FB_SERVICE_KEY, "base64").toString("utf8");
+// const serviceAccount = JSON.parse(decoded);
 
 
 // middleware
@@ -91,10 +193,96 @@ async function startServer() {
     // users api
 
     // app.get('/users', verifyToken, verifyAdmin, async (req, res) => {
-    app.get('/users', async (req, res) => {
-      const result = await usersCollection.find().toArray();
-      res.send(result);
+    // app.get('/users', async (req, res) => {
+    //   const email = req.query.email;
+    //   console.log("users", email)
+      
+    //   const result = await usersCollection.find().toArray();
+    //   res.send(result);
+    // });
+
+    // app.get('/users/:email/role', async (req, res) => {
+    //   const email = req.params.email;
+
+    //   const user = await usersCollection.findOne({ email });
+
+    //   res.send({ role: user?.role || 'user' });
+    // });
+
+    // app.get('/users/:id', async (req, res) => {
+    //   const id = req.params.id;
+    //   const result = await usersCollection.findOne({ _id: new ObjectId(id) });
+    //   res.send(result);
+    // })
+
+    
+//  app.get('/users', verifyToken, async (req, res) => {
+
+//       try {
+//         const email = req.query.email;
+//         const tokenEmail = req.decoded.email;
+
+//         console.log("userssss email", email)
+//         console.log("tokennnn email", tokenEmail)
+        
+//         // const user = await usersCollection.findOne({ email });
+//         const user = await usersCollection.findOne({ email: tokenEmail });
+//         console.log('userssssssss', user)
+
+//         if (!user) {
+//           return res.status(403).send({ message: 'Forbidden access' });
+//         }
+
+
+//         // 🔥 admin → all users
+//         if (user?.role === 'admin') {
+//           const result = await usersCollection
+//             .find({})
+//             .sort({ createdAt: -1 })
+//             .toArray();
+
+//           return res.send(result);
+//         }
+//       } catch (error) {
+//         console.log(error)
+//       }
+
+//     });
+
+    //////////////ai///////////////////////
+    app.get('/users', verifyToken, async (req, res) => {
+  try {
+    const tokenEmail = req.decoded.email;
+
+    const user = await usersCollection.findOne({
+      email: tokenEmail
     });
+
+    if (!user) {
+      return res.status(403).send({
+        message: 'Forbidden access'
+      });
+    }
+
+    if (user.role === 'admin') {
+      const result = await usersCollection
+        .find({})
+        .sort({ createdAt: -1 })
+        .toArray();
+
+      return res.send(result);
+    }
+
+    return res.send([user]); // <- important
+
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).send({
+      message: 'Server Error'
+    });
+  }
+});
 
     app.get('/users/:email/role', async (req, res) => {
       const email = req.params.email;
@@ -104,12 +292,22 @@ async function startServer() {
       res.send({ role: user?.role || 'user' });
     });
 
-
-
     app.get('/users/:id', async (req, res) => {
       const id = req.params.id;
-      const result = await usersCollection.findOne({ _id: new ObjectId(id) });
-      res.send(result);
+      const email = req.query.email;
+
+      const user = await usersCollection.findOne({ email });
+
+       if (!user) {
+          return res.status(403).send({ message: 'Forbidden access' });
+        }
+
+        if (user?.email === email) {
+
+          const result = await usersCollection.findOne({ _id: new ObjectId(id) });
+
+          return res.send(result);
+        }
     })
 
 
@@ -146,6 +344,44 @@ async function startServer() {
       res.send(result);
     });
 
+    app.patch('/users/:email', async (req, res) => {
+
+    const email = req.params.email;
+
+    // const email = req.query.email;
+
+      // const user = await usersCollection.findOne({ email });
+
+      //  if (!user) {
+      //     return res.status(403).send({ message: 'Forbidden access' });
+      //   }
+
+    // Security Check
+    if (!email) {
+        return res.status(403).send({
+            message: 'forbidden access'
+        });
+    }
+
+    const { displayName, photoURL } = req.body;
+
+    const filter = { email };
+
+    const updateDoc = {
+        $set: {
+            displayName,
+            photoURL
+        }
+    };
+
+    const result = await usersCollection.updateOne(
+        filter,
+        updateDoc
+    );
+
+    res.send(result);
+});
+
 
     // food api
     app.get('/menu', async (req, res) => {
@@ -177,7 +413,7 @@ async function startServer() {
 
 
     // app.post('/menu', verifyToken, verifyAdmin, async (req, res) => {
-    app.post('/menu', async (req, res) => {
+    app.post('/menu', verifyToken, async (req, res) => {
       try {
         const food = req.body;
         const result = await foodsCollection.insertOne(food);
@@ -189,7 +425,7 @@ async function startServer() {
     });
 
     // app.patch('/menu/:id', verifyToken, verifyAdmin, async (req, res) => {
-    app.patch('/menu/:id', async (req, res) => {
+    app.patch('/menu/:id', verifyToken, async (req, res) => {
       const id = req.params.id;
       const updatedFood = req.body;
 
@@ -202,7 +438,7 @@ async function startServer() {
     });
 
     // app.delete('/menu/:id', verifyToken, verifyAdmin, async (req, res) => {
-    app.delete('/menu/:id', async (req, res) => {
+    app.delete('/menu/:id', verifyToken, async (req, res) => {
       const id = req.params.id;
       const result = await foodsCollection.deleteOne({
         _id: new ObjectId(id)
@@ -306,15 +542,21 @@ async function startServer() {
 
     // app.get('/orders', verifyToken, async (req, res) => {
     
-    app.get('/orders', async (req, res) => {
+    app.get('/orders', verifyToken, async (req, res) => {
       try {
         const email = req.query.email;
-        // const tokenEmail = req.token_email;
+        const tokenEmail = req.decoded.email;
+        // console.log("order email", email)
         
 
         
-        const user = await usersCollection.findOne({ email });
-        // const user = await usersCollection.findOne({ email: tokenEmail });
+        // const user = await usersCollection.findOne({ email });
+        const user = await usersCollection.findOne({ email: tokenEmail });
+        // console.log('user orders', user)
+
+        if (!user) {
+          return res.status(403).send({ message: 'Forbidden access' });
+        }
 
 
         // 🔥 admin → all orders
@@ -332,12 +574,24 @@ async function startServer() {
           return res.status(403).send({ message: 'Forbidden access' });
         }
 
-        const result = await ordersCollection
-          .find({ customerEmail: email })
+        //   const result = await ordersCollection
+        //   .find({ customerEmail: email })
+        //   .sort({ createdAt: -1 })
+        //   .toArray();
+
+        // res.send(result);
+
+        if(user?.role === 'user'){
+          const result = await ordersCollection
+          .find({ customerEmail: tokenEmail })
           .sort({ createdAt: -1 })
           .toArray();
 
-        res.send(result);
+        return res.send(result);
+        }
+         else{
+          return res.status(403).send({ message: 'Forbidden access' });
+        }
 
       } catch (error) {
         res.status(500).send({ message: 'Failed to fetch orders' });
@@ -372,7 +626,7 @@ async function startServer() {
     });
 
 
-    app.patch('/orders/:id', async (req, res) => {
+    app.patch('/orders/:id', verifyToken, async (req, res) => {
       try {
 
         const id = req.params.id;

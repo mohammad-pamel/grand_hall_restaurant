@@ -47,13 +47,40 @@ const AuthProvider = ({ children }) => {
       }
     });
 
+    /////////ai/////////////
+    // useEffect(() => {
+    //     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+
+    //         if (currentUser) {
+
+    //             const token = await currentUser.getIdToken();
+
+    //             localStorage.setItem('access-token', token);
+
+    //             setUser(currentUser);
+
+    //         } else {
+
+    //             localStorage.removeItem('access-token');
+
+    //             setUser(null);
+
+    //         }
+
+    //         setLoading(false);
+    //     });
+
+    //     return () => unsubscribe();
+
+    // }, []);
+
     // useEffect(() => {
     //     const unSubscribe = onAuthStateChanged(auth, async (user) => {
     //         setUser(user);
     //         console.log('current user', user)
     //         if (user) {
     //             const loggedUser = {email: user.email}
-                
+
     //             fetch('http://localhost:5000/jwt', {
     //                 method: 'POST',
     //                 headers: {

@@ -152,7 +152,7 @@ const Cart = () => {
     <div className="mt-6 md:mt-8 border-t pt-4 md:pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
 
       <h2 className="text-xl md:text-2xl font-bold">
-        Total: ৳{totalPrice + 100}
+        {cart.length === 0 ? `Total: ৳ ${totalPrice}` : `Total: ৳ ${totalPrice + 100}`}
       </h2>
 
       <Link to="/checkout">

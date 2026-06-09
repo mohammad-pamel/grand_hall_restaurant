@@ -47,11 +47,12 @@ export const router = createBrowserRouter([
       },
       {
         path: 'my-orders',
-        element: (
-          <PrivateRoute>
-            <MyOrders />
-          </PrivateRoute>
-        )
+        // element: (
+        //   <PrivateRoute>
+        //     <MyOrders />
+        //   </PrivateRoute>
+        // )
+        element: <UserRoute><MyOrders></MyOrders></UserRoute>
       },
       {
         path: 'cart',

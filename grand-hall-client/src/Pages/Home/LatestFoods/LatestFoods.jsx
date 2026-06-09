@@ -1,12 +1,12 @@
 import React from 'react';
-import useAuth from '../../../hooks/useAuth';
+// import useAuth from '../../../hooks/useAuth';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import { useQuery } from '@tanstack/react-query';
 import { NavLink, useNavigate } from 'react-router';
 
 const LatestFoods = () => {
 
-    const { user } = useAuth();
+    // const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
     const navigate = useNavigate();
 
@@ -20,12 +20,12 @@ const LatestFoods = () => {
 
     // ⭐ View Details Button
     const handleDetailsBtn = (id) => {
-        if (!user) {
-            navigate('/login');
-        }
-        else {
-            navigate(`/food-details/${id}`);
-        }
+        // if (!user) {
+        //     navigate('/login');
+        // }
+        // else {
+            // }
+                navigate(`/food-details/${id}`);
     };
 
     return (

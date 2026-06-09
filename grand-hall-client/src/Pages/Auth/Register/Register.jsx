@@ -64,7 +64,7 @@ const Register = () => {
                 console.log(error);
             })
     }
-    
+
 
     return (
         <div className=''>

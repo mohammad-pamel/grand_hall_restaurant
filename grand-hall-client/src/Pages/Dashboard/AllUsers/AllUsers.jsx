@@ -10,9 +10,10 @@ const AllUsers = () => {
 
 
     const { data: users = [], refetch } = useQuery({
-    queryKey: ['users'],
+    queryKey: ['users', user?.email],
     queryFn: async () => {
-        const res = await axiosSecure.get('/users');
+        const res = await axiosSecure.get(`/users?email=${user.email}`);
+        // const res = await axiosSecure.get(`/users`);
         // console.log("all users", res.data)
         return res.data ;
     }

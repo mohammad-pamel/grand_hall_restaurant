@@ -3,6 +3,7 @@ import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import useAuth from '../../../hooks/useAuth';
 import Swal from 'sweetalert2';
 import { useState } from 'react';
+import Forbidden from '../../../Components/Forbidden/Forbidden';
 
 const MyOrders = () => {
 
@@ -20,7 +21,65 @@ const MyOrders = () => {
     }
   });
 
-  // console.log("my-orders orders", orders);
+  // const { data: users = [], isLoading: usersLoading } = useQuery({
+  //   queryKey: ['users', user?._id],
+  //   enabled: !!user && !loading,
+  //   queryFn: async () => {
+  //     const res = await axiosSecure.get(`/users?email=${user.email}`);
+  //     console.log("usersssss", res.data);
+  //     return res.data;
+  //   }
+  // });
+  const {
+  data: users = [],
+  isLoading: usersLoading
+  // error
+} = useQuery({
+  queryKey: ['users', user?.email],
+  enabled: !!user && !loading,
+  queryFn: async () => {
+    const res = await axiosSecure.get(`/users?email=${user.email}`);
+    return res.data;
+  }
+});
+
+// console.log("usersLoading:", usersLoading);
+// console.log("users:", users);
+// console.log("error:", error);
+
+  if (usersLoading) {
+    return <p>Loading...</p>;
+  }
+
+
+  const dbUser = users.find(
+    u => u.email === user?.email
+  );
+
+  // console.log("dbuders", dbUser)
+
+  if (!dbUser) {
+    return <Forbidden></Forbidden>
+  }
+
+  //   const isValidUser =
+  //   users?.email === user?.email;
+
+
+  // if (!isValidUser) {
+  //   return (
+  //     <div>
+  //       User not found
+  //     </div>
+  //   );
+  // }
+
+  // const customerEmail = orders.map(order => (order.cutomerEmail));
+  // console.log("customer email", customerEmail);
+
+
+
+  // console.log("my-orders userss", users);
 
   // Cancel order
   const handleCancelOrder = async (id) => {
@@ -100,7 +159,7 @@ const MyOrders = () => {
 
           <thead>
 
-            <tr className="text-xs md:text-sm">
+            <tr className="text-xs md:text-sm text-center">
               <th>No</th>
               <th className="min-w-[180px]">Food</th>
               <th className="whitespace-nowrap">Total</th>
@@ -113,7 +172,7 @@ const MyOrders = () => {
 
           </thead>
 
-          <tbody>
+          <tbody className="text-center">
 
             {orders.map((order, index) => (
 
@@ -160,7 +219,7 @@ const MyOrders = () => {
                 <td>
 
                   <span
-                    className={`text-white text-xs md:text-sm px-2 py-1 rounded ${statusColor(order.status)}`}
+                    className={`text-secondary text-xs md:text-sm p-2 rounded ${statusColor(order.status)}`}
                   >
                     {order.status}
                   </span>
@@ -171,7 +230,7 @@ const MyOrders = () => {
                 <td>
 
                   <span
-                    className={`text-white text-xs md:text-sm px-2 py-1 rounded ${paymentStatusColor(order.paymentStatus)}`}
+                    className={`text-secondary text-xs md:text-sm p-2 rounded ${paymentStatusColor(order.paymentStatus)}`}
                   >
                     {order.paymentStatus}
                   </span>
@@ -179,12 +238,12 @@ const MyOrders = () => {
                 </td>
                 <td>
 
-                  {order.paymentStatus === 'unpaid' && <button onClick={() => paymentBkash(order)} className='bg-primary text-secondary p-2'>Pay Now</button>}
+                  {order.paymentStatus === 'unpaid' && <button onClick={() => paymentBkash(order)} className='bg-primary text-secondary p-2 rounded'>Pay Now</button>}
                   {/* <button onClick={() => paymentBkash(order)} className='bg-primary text-secondary p-2'>Pay Now</button> */}
-                  {order.paymentStatus === 'paid' && <button onClick={() => paymentBkash(order)} className='bg-primary text-secondary p-2'>Paid</button>}
+                  {order.paymentStatus === 'paid' && <button onClick={() => paymentBkash(order)} className='bg-primary text-secondary p-2 rounded'>Paid</button>}
 
                   {/* <span
-                  className={`text-white text-xs md:text-sm px-2 py-1 rounded ${paymentStatusColor(order.paymentStatus)}`}
+                  className={`text-white text-xs md:text-sm p-2  rounded ${paymentStatusColor(order.paymentStatus)}`}
                 >
                   {order.paymentStatus}
                 </span> */}
@@ -197,36 +256,28 @@ const MyOrders = () => {
                 </td>
 
                 {/* ACTION */}
-                <td className="flex flex-col md:flex-row gap-2">
+                <td className="align-middle text-center">
+                  <div className="flex flex-col md:flex-row items-center justify-center gap-2">
+                    <button
+                      onClick={() => setSelectedOrder(order)}
+                      className="btn btn-xs md:btn-sm bg-primary text-secondary"
+                    >
+                      Details
+                    </button>
 
-                  {/* DETAILS */}
-                  <button
-                    onClick={() => setSelectedOrder(order)}
-                    className="btn btn-xs md:btn-sm bg-primary text-white"
-                  >
-                    Details
-                  </button>
-
-                  {/* CANCEL */}
-                  {
-                    order.status?.toLowerCase() === 'pending' ? (
-
+                    {order.status?.toLowerCase() === 'pending' ? (
                       <button
                         onClick={() => handleCancelOrder(order._id)}
-                        className="btn btn-xs md:btn-sm bg-red-500 text-white"
+                        className="btn btn-xs md:btn-sm bg-red-500 text-secondary"
                       >
                         Cancel
                       </button>
-
                     ) : (
-
-                      <span className='bg-red-600 text-white px-2 py-1 rounded text-[10px] md:text-xs text-center'>
+                      <span className="bg-red-600 text-secondary p-2 rounded text-[10px] md:text-xs">
                         Not Allowed
                       </span>
-
-                    )
-                  }
-
+                    )}
+                  </div>
                 </td>
 
               </tr>

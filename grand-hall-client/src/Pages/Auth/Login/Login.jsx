@@ -34,6 +34,7 @@ const Login = () => {
                 });
 
                 const token = res.data.token;
+                // console.log("tokennnn", token)
 
                 // ✅ SAME KEY everywhere
                 localStorage.setItem('access-token', token);
