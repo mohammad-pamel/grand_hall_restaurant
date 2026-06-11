@@ -337,7 +337,7 @@ export default function ProfileDashboard() {
                         <button
                             type="submit"
                             disabled={updating}
-                            className="btn btn-primary w-full"
+                            className="btn bg-primary text-secondary hover:bg-secondary hover:text-primary w-full"
                         >
                             {updating
                                 ? "Updating..."

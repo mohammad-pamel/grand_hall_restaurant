@@ -266,14 +266,14 @@ const ManageFoods = () => {
 
           <div className='flex flex-col md:flex-row gap-3'>
 
-            <button className='btn btn-primary flex-1'>
+            <button className='btn bg-primary text-secondary hover:bg-secondary hover:text-primary flex-1'>
               Update Food
             </button>
 
             <button
               type="button"
               onClick={closeModal}
-              className='btn btn-outline flex-1'
+              className='btn btn-outline hover:bg-secondary hover:text-primary flex-1'
             >
               Close
             </button>

@@ -222,7 +222,7 @@ const AddFood = () => {
 
             </div>
 
-            <button className="btn bg-primary w-full mt-6">
+            <button className="btn bg-primary text-secondary hover:bg-secondary hover:text-primary w-full mt-6">
                 Add Food
             </button>
 

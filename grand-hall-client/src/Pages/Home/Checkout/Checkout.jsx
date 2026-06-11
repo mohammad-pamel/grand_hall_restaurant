@@ -173,7 +173,7 @@ const Checkout = () => {
 
                 <button
                     type="submit"
-                    className="bg-primary text-secondary w-full py-3 rounded-lg"
+                    className="bg-primary text-secondary hover:bg-secondary hover:text-primary w-full py-3 rounded-lg"
                 >
                     Confirm Order
                 </button>

@@ -293,7 +293,7 @@ const ManageOrders = () => {
 
                 <button
                   onClick={() => setSelectedOrder(order)}
-                  className="btn btn-xs md:btn-sm bg-primary text-white"
+                  className="btn btn-xs md:btn-sm bg-primary text-secondary hover:bg-secondary hover:text-primary"
                 >
                   Details
                 </button>
@@ -379,7 +379,7 @@ const ManageOrders = () => {
 
           <button
             onClick={() => setSelectedOrder(null)}
-            className="btn btn-sm mt-4 w-full"
+            className="btn btn-sm mt-4 w-full bg-primary text-secondary hover:bg-secondary hover:text-primary"
           >
             Close
           </button>

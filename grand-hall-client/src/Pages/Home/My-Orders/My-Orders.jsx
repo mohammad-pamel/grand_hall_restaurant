@@ -48,7 +48,7 @@ const MyOrders = () => {
 // console.log("error:", error);
 
   if (usersLoading) {
-    return <p>Loading...</p>;
+    return <span className="loading loading-spinner loading-lg my-14"></span>;
   }
 
 
@@ -105,7 +105,7 @@ const MyOrders = () => {
 
     if (s === 'pending') return 'bg-yellow-400';
     if (s === 'preparing') return 'bg-blue-500';
-    if (s === 'completed') return 'bg-green-600';
+    if (s === 'delivered') return 'bg-green-600';
     if (s === 'cancelled') return 'bg-red-500';
 
     return 'bg-gray-400';
@@ -165,7 +165,7 @@ const MyOrders = () => {
               <th className="whitespace-nowrap">Total</th>
               <th>Status</th>
               <th>Payment Status</th>
-              <th>Payment</th>
+              {/* <th>Payment</th> */}
               <th className="hidden md:table-cell">Date</th>
               <th>Action</th>
             </tr>
@@ -227,7 +227,7 @@ const MyOrders = () => {
                 </td>
 
                 {/* PAYMENT */}
-                <td>
+                {/* <td>
 
                   <span
                     className={`text-secondary text-xs md:text-sm p-2 rounded ${paymentStatusColor(order.paymentStatus)}`}
@@ -235,12 +235,12 @@ const MyOrders = () => {
                     {order.paymentStatus}
                   </span>
 
-                </td>
+                </td> */}
                 <td>
 
-                  {order.paymentStatus === 'unpaid' && <button onClick={() => paymentBkash(order)} className='bg-primary text-secondary p-2 rounded'>Pay Now</button>}
+                  {order.paymentStatus === 'unpaid' && <button onClick={() => paymentBkash(order)} className='bg-primary hover:bg-secondary hover:text-primary text-secondary p-2 rounded'>Pay Now</button>}
                   {/* <button onClick={() => paymentBkash(order)} className='bg-primary text-secondary p-2'>Pay Now</button> */}
-                  {order.paymentStatus === 'paid' && <button onClick={() => paymentBkash(order)} className='bg-primary text-secondary p-2 rounded'>Paid</button>}
+                  {order.paymentStatus === 'paid' && <button className={`text-secondary text-xs md:text-sm p-2 rounded ${paymentStatusColor(order.paymentStatus)}`}>Paid</button>}
 
                   {/* <span
                   className={`text-white text-xs md:text-sm p-2  rounded ${paymentStatusColor(order.paymentStatus)}`}
@@ -260,7 +260,7 @@ const MyOrders = () => {
                   <div className="flex flex-col md:flex-row items-center justify-center gap-2">
                     <button
                       onClick={() => setSelectedOrder(order)}
-                      className="btn btn-xs md:btn-sm bg-primary text-secondary"
+                      className="btn btn-xs md:btn-sm bg-primary text-secondary hover:bg-secondary hover:text-primary"
                     >
                       Details
                     </button>
@@ -268,7 +268,7 @@ const MyOrders = () => {
                     {order.status?.toLowerCase() === 'pending' ? (
                       <button
                         onClick={() => handleCancelOrder(order._id)}
-                        className="btn btn-xs md:btn-sm bg-red-500 text-secondary"
+                        className="btn btn-xs md:btn-sm bg-red-500 text-secondary hover:bg-red-600"
                       >
                         Cancel
                       </button>
@@ -357,7 +357,7 @@ const MyOrders = () => {
 
             <button
               onClick={() => setSelectedOrder(null)}
-              className="btn btn-sm mt-4 w-full"
+              className="btn btn-sm mt-4 w-full bg-primary text-secondary hover:bg-secondary hover:text-primary"
             >
               Close
             </button>

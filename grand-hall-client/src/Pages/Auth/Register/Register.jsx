@@ -52,7 +52,16 @@ const Register = () => {
 
 
                         updateUserProfile(userProfile)
-                            .then(() => {
+                            .then(async () => {
+
+                                const userInfo = {
+                                    uid: result.user.uid,
+                                    email: result.user.email
+                                };
+
+                                const res = await axiosSecure.post(`/jwt`, userInfo);
+
+                                localStorage.setItem('access-token', res.data.token);
                                 // console.log('User updated profile done');
                                 // navigate(location.state || '/');
                                 navigate(location?.state?.from?.pathname || '/');

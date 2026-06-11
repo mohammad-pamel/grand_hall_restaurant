@@ -11,30 +11,24 @@ const Login = () => {
     const { signInUser } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
-    const axios = useAxiosSecure();
+    const axiosSecure = useAxiosSecure();
 
     const handleLogin = (data) => {
-        // console.log('After login', data);
-        // signInUser(data.email, data.password)
-        //     .then(async (result) => {
-
-        //         const res = await axios.post(`${import.meta.env.VITE_API_URL}/jwt`, {
-        //             email: result.user.email
-        //         });
-
-        //         localStorage.setItem('access-token', res.data.token);
-
-        //         navigate(location?.state?.from?.pathname || '/');
-        //     });
+      
         signInUser(data.email, data.password)
             .then(async (result) => {
-
-                const res = await axios.post(`${import.meta.env.VITE_API_URL}/jwt`, {
+                // console.log("result", result);
+                const userInfo = {
+                    uid: result.user.uid,
                     email: result.user.email
-                });
+                };
+
+                console.log("result", userInfo);
+
+                // const res = await axios.post(`${import.meta.env.VITE_API_URL}/jwt`, userInfo);
+                const res = await axiosSecure.post(`/jwt`, userInfo);
 
                 const token = res.data.token;
-                // console.log("tokennnn", token)
 
                 // ✅ SAME KEY everywhere
                 localStorage.setItem('access-token', token);

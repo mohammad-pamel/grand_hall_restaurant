@@ -108,7 +108,7 @@ const Cart = () => {
 
               <button
                 onClick={() => handleDecrease(item)}
-                className="px-2 md:px-3 py-1 bg-primary text-white rounded"
+                className="px-2 md:px-3 py-1 bg-primary text-secondary hover:bg-secondary hover:text-primary rounded"
               >
                 -
               </button>
@@ -119,7 +119,7 @@ const Cart = () => {
 
               <button
                 onClick={() => handleIncrease(item)}
-                className="px-2 md:px-3 py-1 bg-primary text-white rounded"
+                className="px-2 md:px-3 py-1 bg-primary text-secondary hover:bg-secondary hover:text-primary rounded"
               >
                 +
               </button>
@@ -134,7 +134,7 @@ const Cart = () => {
             {/* Delete */}
             <button
               onClick={() => handleDelete(item._id)}
-              className="bg-red-600 hover:bg-red-400 text-white px-3 py-1 rounded text-sm md:text-base"
+              className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm md:text-base"
             >
               Delete
             </button>
