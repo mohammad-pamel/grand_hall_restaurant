@@ -4,8 +4,7 @@ import { useEffect } from 'react';
 
 const axiosSecure = axios.create({
   // baseURL: 'http://localhost:5000'
-  // baseURL: import.meta.env.VITE_API_URL
-  baseURL: 'https://grand-hall-restaurant-server.vercel.app',
+  baseURL: import.meta.env.VITE_API_URL
 });
 
 const useAxiosSecure = () => {

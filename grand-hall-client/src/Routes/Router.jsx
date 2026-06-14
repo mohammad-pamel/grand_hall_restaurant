@@ -19,8 +19,14 @@ import AboutUs from './../Pages/Home/AboutUs/AboutUs';
 import PrivateRoute from "./PrivateRoute";
 import Cart from "../Pages/Home/Cart/Cart";
 import Checkout from "../Pages/Home/Checkout/Checkout";
-import Payment from "../Pages/Home/Payment/Payment";
-import paymentSuccess from "../Pages/Home/Payment/PaymentSuccess";
+// import Payment from "../Pages/Home/Payment/Payment";
+// import paymentFail from '../Pages/Home/Payment/PaymentFail';
+// import paymentSuccess from '../Pages/Home/Payment/PaymentSuccess';
+import Payment from './../Pages/Home/Payment/Payment';
+import PaymentSuccess from './../Pages/Home/Payment/PaymentSuccess';
+import PaymentFail from './../Pages/Home/Payment/PaymentFail';
+
+
 
 export const router = createBrowserRouter([
   {
@@ -67,12 +73,24 @@ export const router = createBrowserRouter([
         Component: AboutUs
       },
       {
-        path: 'paymentBkash',
-        Component: Payment
+        path: 'payment',
+        element: <Payment></Payment>
       },
       {
-        path: 'payment-success/:id',
-        Component: paymentSuccess
+        path: 'paymentSuccess/:id',
+        Component: PaymentSuccess
+      },
+      // {
+      //   path: 'paymentSuccess/:id',
+      //   element: <PaymentSuccess></PaymentSuccess>
+      // },
+      {
+        path: 'payment/fail',
+        element: <PaymentFail></PaymentFail>
+      },
+      {
+        path: 'payment/cancel',
+        element: <div>Payment Cancelled</div>
       }
     ]
   },
@@ -116,19 +134,7 @@ export const router = createBrowserRouter([
       {
         path: 'my-profile',
         element: <AdminRoute><MyProfile></MyProfile></AdminRoute>
-      },
-      //     {
-      //       path: 'payments',
-      //       element: <UserRoute><Payments></Payments></UserRoute>
-      //     },
-      //     {
-      //       path: 'payment-success',
-      //       element: <UserRoute><PaymentSuccess></PaymentSuccess></UserRoute>
-      //     },
-      //     {
-      //       path: 'payment-cancelled',
-      //       element: <UserRoute><PaymentCancelled></PaymentCancelled></UserRoute>
-      //     }
+      }
     ]
   },
   {

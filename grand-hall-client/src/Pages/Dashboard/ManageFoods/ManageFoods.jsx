@@ -110,7 +110,7 @@ const ManageFoods = () => {
   };
 
   if (isLoading) {
-    return <p className="text-center mt-20">Loading foods...</p>;
+    return <span className="loading loading-infinity loading-xl"></span>;
   }
 
  return (

@@ -13,16 +13,19 @@ const Navbar = () => {
 
     const { user, logOut } = useAuth();
     const { role } = useRole();
-    
 
-    const { data: cart = {} } = useQuery({
-        queryKey: ['cart'],
-        // enabled: !!id,
+
+    const { data: cart = [] } = useQuery({
+        queryKey: ["cart", user?.email],
+        enabled: !!user?.email,
         queryFn: async () => {
-            const res = await axiosSecure.get(`/cart`);
+            const res = await axiosSecure.get(`/cart?email=${user.email}`);
             return res.data;
         }
     });
+
+    console.log("cartttt", cart);
+
 
 
 
@@ -35,34 +38,38 @@ const Navbar = () => {
             })
     }
 
+    const navStyle = ({ isActive }) =>
+        isActive
+            ? "font-bold text-primary border-b-2 border-primary"
+            : "hover:text-primary hover:bg-secondary";
 
-   
+
 
     const links = <>
-        <li><NavLink to='/'>Home</NavLink></li>
-        <li><NavLink to='/all-foods'>All Foods</NavLink></li>
+        <li><NavLink to='/' className={navStyle}>Home</NavLink></li>
+        <li><NavLink to='/all-foods' className={navStyle}>All Foods</NavLink></li>
 
         {user && role === 'user' && (
             <>
-                <li><NavLink to='/my-orders'>My Orders</NavLink></li>
-                <li><NavLink to='/payments'>Payments</NavLink></li>
+                <li><NavLink to='/my-orders' className={navStyle}>My Orders</NavLink></li>
+                <li><NavLink to='/payment' className={navStyle}>Payments</NavLink></li>
             </>
         )}
 
         {user && role === 'admin' && (
             <>
-                <li><NavLink to='/dashboard'>Dashboard</NavLink></li>
+                <li><NavLink to='/dashboard' className={navStyle}>Dashboard</NavLink></li>
             </>
         )}
     </>
 
 
     return (
-        <div className="navbar bg-base-100 shadow-sm rounded-xl p-2 ">
+        <div className="navbar bg-base-100 shadow-sm rounded-xl ">
             <div className="navbar-start">
                 <div className="dropdown">
                     <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" /> </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 -ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" /> </svg>
                     </div>
                     <ul
                         tabIndex="-1"
@@ -90,22 +97,22 @@ const Navbar = () => {
                     }
                 </div>
                 {
-                    user ? <button onClick={handleLogOut} className="btn mr-1 text-secondary hover:text-primary hover:bg-secondary bg-primary">Logout</button> : <Link to='/login' className="btn mr-1 text-secondary hover:text-primary hover:bg-secondary bg-primary">Login</Link>
+                    user ? <button onClick={handleLogOut} className="btn mr-2 p-2 text-secondary hover:text-primary hover:bg-secondary bg-primary">Logout</button> : <Link to='/login' className="btn mr-2 p-2 text-secondary hover:text-primary hover:bg-secondary bg-primary">Login</Link>
                 }
                 {/* <input checked={theme === "dark"} onChange={handleThemeToogle} type="checkbox" className="toggle md:hidden" /> */}
 
 
-                <Link to="/cart" className="relative">
+                <Link to="/cart" className="relative mr-2">
 
                     <FaShoppingCart className="text-2xl cursor-pointer" />
 
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-lg px-2 py-2 rounded-full">
+                    <span className="absolute -top-3 -right-2 bg-red-500 text-secondary px-1 rounded-full">
                         {cart.length}
                     </span>
 
                 </Link>
 
-               
+
             </div>
         </div>
 

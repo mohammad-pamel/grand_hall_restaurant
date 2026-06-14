@@ -14,7 +14,7 @@ const AdminRoute = ({ children }) => {
             <span className='loading loading-infinity loading-xl'></span>
         </div>
     }
-
+ 
 
     if (role !== 'admin') {
         return <Forbidden></Forbidden>

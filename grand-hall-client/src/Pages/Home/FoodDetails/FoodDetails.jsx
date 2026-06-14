@@ -1,6 +1,5 @@
 import React from 'react';
 import { useParams } from 'react-router';
-// import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import { useQuery } from '@tanstack/react-query';
 import Swal from 'sweetalert2';
@@ -14,53 +13,53 @@ const FoodDetails = () => {
   const { user, loading } = useAuth();
 
   // Fetch food details
-  
+
   const { data: food = {}, isLoading } = useQuery({
-  queryKey: ['food', id],
-  enabled: !!id && !loading,
-  queryFn: async () => {
-    const res = await axiosSecure.get(`/menu/${id}`);
-    return res.data;
-  }
-});
+    queryKey: ['food', id],
+    enabled: !!id && !loading,
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/menu/${id}`);
+      return res.data;
+    }
+  });
 
- const handleAddToCart = async () => {
+  const handleAddToCart = async () => {
 
-  if (!user) {
-    Swal.fire({
-      title: "Please login first",
-      icon: "warning"
-    })
-    navigate("/login")
-    return
-  }
-
-  const cartItem = {
-    foodId: food._id,
-    name: food.name,
-    // image: food.media.thumbnail,
-    image: food?.media?.thumbnail,
-    price: food.pricing.discountPrice || food.pricing.basePrice,
-    quantity: 1,
-    email: user.email
-  }
-
-  try {
-
-    const res = await axiosSecure.post("/cart", cartItem)
-
-    if (res.data.insertedId) {
+    if (!user) {
       Swal.fire({
-        icon: "success",
-        title: "Added to cart 🛒"
+        title: "Please login first",
+        icon: "warning"
       })
+      navigate("/login")
+      return
     }
 
-  } catch (err) {
-    console.log(err)
-  }
+    const cartItem = {
+      foodId: food._id,
+      name: food.name,
+      // image: food.media.thumbnail,
+      image: food?.media?.thumbnail,
+      price: food.pricing.discountPrice || food.pricing.basePrice,
+      quantity: 1,
+      email: user.email
+    }
 
-}
+    try {
+
+      const res = await axiosSecure.post("/cart", cartItem)
+
+      if (res.data.insertedId) {
+        Swal.fire({
+          icon: "success",
+          title: "Added to cart 🛒"
+        })
+      }
+
+    } catch (err) {
+      console.log(err)
+    }
+
+  }
 
   // Handle Bkash Payment
   // const handleBkashPayment = async (orderId, amount) => {
@@ -176,7 +175,7 @@ const FoodDetails = () => {
   // };
 
   if (isLoading) {
-    return <p className="text-center py-20 text-xl">Loading...</p>;
+    return <span className="loading loading-infinity loading-xl"></span>;
   }
 
   return (
