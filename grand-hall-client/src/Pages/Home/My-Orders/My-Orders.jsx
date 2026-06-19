@@ -91,15 +91,15 @@ const MyOrders = () => {
 
   const paymentBkash = async (order) => {
   try {
-    console.log("order bkash", order)
+    // console.log("order bkash", order)
 
     const response = await axiosSecure.post(
       '/paymentBkash',
       { orderId: order._id }
     );
 
-    console.log("FULL RESPONSE:", response);
-    console.log("DATA:", response.data);
+    // console.log("FULL RESPONSE:", response);
+    // console.log("DATA:", response.data.url);
 
     if (response.data?.url) {
       window.location.replace(response.data.url);
@@ -108,8 +108,10 @@ const MyOrders = () => {
     }
 
   } catch (error) {
-    console.log("PAYMENT ERROR:", error);
-    console.log("SERVER ERROR:", error?.response?.data);
+    console.log(error.message);
+    // console.log("PAYMENT ERROR:", error);
+    // console.log("SERVER ERROR:", error?.response?.data);
+    // console.log(error.response?.data.sslResponse);
   }
 };
 

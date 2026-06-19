@@ -19,12 +19,10 @@ import AboutUs from './../Pages/Home/AboutUs/AboutUs';
 import PrivateRoute from "./PrivateRoute";
 import Cart from "../Pages/Home/Cart/Cart";
 import Checkout from "../Pages/Home/Checkout/Checkout";
-// import Payment from "../Pages/Home/Payment/Payment";
-// import paymentFail from '../Pages/Home/Payment/PaymentFail';
-// import paymentSuccess from '../Pages/Home/Payment/PaymentSuccess';
 import Payment from './../Pages/Home/Payment/Payment';
 import PaymentSuccess from './../Pages/Home/Payment/PaymentSuccess';
 import PaymentFail from './../Pages/Home/Payment/PaymentFail';
+import PaymentCancel from "../Pages/Home/Payment/PaymentCancel";
 
 
 
@@ -53,11 +51,6 @@ export const router = createBrowserRouter([
       },
       {
         path: 'my-orders',
-        // element: (
-        //   <PrivateRoute>
-        //     <MyOrders />
-        //   </PrivateRoute>
-        // )
         element: <UserRoute><MyOrders></MyOrders></UserRoute>
       },
       {
@@ -77,20 +70,16 @@ export const router = createBrowserRouter([
         element: <Payment></Payment>
       },
       {
-        path: 'paymentSuccess/:id',
+        path: 'payment/success/:tran_id',
         Component: PaymentSuccess
       },
-      // {
-      //   path: 'paymentSuccess/:id',
-      //   element: <PaymentSuccess></PaymentSuccess>
-      // },
       {
-        path: 'payment/fail',
+        path: 'payment/fail/:tran_id',
         element: <PaymentFail></PaymentFail>
       },
       {
-        path: 'payment/cancel',
-        element: <div>Payment Cancelled</div>
+        path: 'payment/cancel/:tran_id',
+        element: <PaymentCancel></PaymentCancel>
       }
     ]
   },
@@ -111,7 +100,6 @@ export const router = createBrowserRouter([
   {
     path: 'dashboard',
     element: <PrivateRoute><DashboardLayout></DashboardLayout></PrivateRoute>,
-    // element: <DashboardLayout></DashboardLayout>,
     children: [
       {
         path: 'add-food',
@@ -125,7 +113,6 @@ export const router = createBrowserRouter([
       {
         path: 'all-users',
         element: <AdminRoute><AllUsers></AllUsers></AdminRoute>
-        // loader: () => axios.get('http://localhost:3000/users')
       },
       {
         path: 'manage-foods',

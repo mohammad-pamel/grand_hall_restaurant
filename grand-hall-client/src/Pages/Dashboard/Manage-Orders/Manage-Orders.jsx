@@ -14,14 +14,7 @@ const ManageOrders = () => {
   const [paymentFilter, setPaymentFilter] = useState('all');
   const [selectedOrder, setSelectedOrder] = useState(null);
 
-  // const { data: orders = [], refetch } = useQuery({
-  //   queryKey: ['orders'],
-  //   queryFn: async () => {
-  //     const res = await axiosSecure.get('/orders');
-  //     console.log("manage orders: ", res.data)
-  //     return res.data;
-  //   }
-  // });
+ 
 
   const { data: orders = [], refetch } = useQuery({
       queryKey: ['orders', user?.email],
